@@ -58,9 +58,6 @@ fun main() {
             static("/") {
                 resources("")
             }
-            route(ShoppingListItem.path) {
-                // ...
-            }
             get("/hello") {
                 call.respondText("Hello, API!")
             }
