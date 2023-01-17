@@ -25,9 +25,10 @@ val shoppingList = mutableListOf(
 
 //ORG_GRADLE_PROJECT_isProduction TODO deployment!!!
 
-val connectionString: ConnectionString? = System.getenv("MONGODB_URI")?.let {
+val connectionString: ConnectionString? = System.getenv("JVM_JS_FULLSTACK_MONGODB_URI")?.let {
     ConnectionString("$it?retryWrites=false")
 }
+//mongodb://mongo:13LlOhFIFwXfgEEPg33X@containers-us-west-157.railway.app:7629/
 
 val client = if (connectionString != null) KMongo.createClient(connectionString).coroutine else KMongo.createClient().coroutine
 val database = client.getDatabase(connectionString?.database ?: "shoppingList")
