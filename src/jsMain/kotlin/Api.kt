@@ -22,6 +22,10 @@ suspend fun addShoppingListItem(shoppingListItem: ShoppingListItem) {
     }
 }
 
+suspend fun toggleShoppingListItem(shoppingListItem: ShoppingListItem) {
+    jsonClient.patch(ShoppingListItem.path + "/${shoppingListItem.id}")
+}
+
 suspend fun deleteShoppingListItem(shoppingListItem: ShoppingListItem) {
     jsonClient.delete(ShoppingListItem.path + "/${shoppingListItem.id}")
 }

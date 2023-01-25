@@ -18,23 +18,39 @@ val App = FC<Props> {
     h1 {
         +"Full-Stack Shopping List"
     }
+
     ul {
         shoppingList.sortedByDescending(ShoppingListItem::priority).forEach { item ->
+
             li {
                 key = item.toString()
                 onClick = {
                     scope.launch {
-                        deleteShoppingListItem(item)
+                        toggleShoppingListItem(item)
                         shoppingList = getShoppingList()
                     }
                 }
-                +"[${item.priority}] ${item.desc} "
+                onDoubleClick = {
+                    if (item.done) {
+                        scope.launch {
+                            deleteShoppingListItem(item)
+                            shoppingList = getShoppingList()
+                        }
+                    }
+                }
+
+                val doneSign = if (item.done) "✓ " else ""
+                +"$doneSign[${item.priority}] ${item.desc}"
             }
         }
     }
     inputComponent {
         onSubmit = { input ->
-            val cartItem = ShoppingListItem(input.replace("!", ""), input.count { it == '!' })
+            val cartItem = ShoppingListItem(
+                desc = input.replace("!", "").trim(),
+                priority = input.count { it == '!' },
+                done = false,
+            )
             scope.launch {
                 addShoppingListItem(cartItem)
                 shoppingList = getShoppingList()
