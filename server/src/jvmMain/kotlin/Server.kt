@@ -33,7 +33,7 @@ val connectionString: ConnectionString? = System.getenv("JVM_JS_FULLSTACK_MONGOD
 //JVM_JS_FULLSTACK_MONGODB_URI=mongodb+srv://english_mongo_admin:mInxuiByBIP10u8f@english.jvcsywe.mongodb.net/?retryWrites=true&w=majority
 
 val client = if (connectionString != null) KMongo.createClient(connectionString).coroutine else KMongo.createClient().coroutine
-val database = client.getDatabase(connectionString?.database ?: "shoppingList")
+val database = client.getDatabase(connectionString?.database ?: "getShoppingList")
 val collection = database.getCollection<ShoppingListItem>()
 
 fun main() {
@@ -66,14 +66,14 @@ fun main() {
             }
             route(ShoppingListItem.path) {
                 get {
-//                    call.respond(shoppingList)
+//                    call.respond(getShoppingList)
                     println("LOGGG: get")
                     call.respond(collection.find().toList())
                 }
                 post {
                     println("LOGGG: post")
                     collection.insertOne(call.receive())
-//                    shoppingList += call.receive<ShoppingListItem>()
+//                    getShoppingList += call.receive<ShoppingListItem>()
                     call.respond(HttpStatusCode.OK)
                 }
                 patch("/{id}") {
@@ -88,7 +88,7 @@ fun main() {
                     val id = call.parameters["id"]?.toInt() ?: error("Invalid delete request")
                     println("LOGGG: delete $id")
                     collection.deleteOne(ShoppingListItem::id eq id)
-//                    shoppingList.removeIf { it.id == id }
+//                    getShoppingList.removeIf { it.id == id }
                     call.respond(HttpStatusCode.OK)
                 }
             }
