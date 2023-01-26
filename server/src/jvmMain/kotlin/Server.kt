@@ -14,6 +14,7 @@ import io.ktor.server.routing.*
 import org.litote.kmongo.coroutine.coroutine
 import org.litote.kmongo.eq
 import org.litote.kmongo.reactivestreams.KMongo
+import java.io.File
 
 
 val shoppingList = mutableListOf(
@@ -52,14 +53,25 @@ fun main() {
             gzip()
         }
         routing {
-            get("/") {
-                call.respondText(
-                    this::class.java.classLoader.getResource("index.html")!!.readText(),
-                    ContentType.Text.Html
-                )
-            }
             static("/") {
-                resources("")
+                val staticDir = listOf(
+                    "../web/build/distributions",
+                    "web/build/distributions"
+                ).map { File(it) }
+                    .filter { it.exists() }
+                    .firstOrNull()
+
+                if (staticDir != null) {
+                    // If staticDir is not null, it means we run "./gradlew server:run" task
+                    staticRootFolder = staticDir
+                    files(".")
+                    default("index.html")
+                } else {
+                    // If staticDir is null, it means we already package all with "./gradlew installDist" task
+                    resources("web-resources")
+                    files(".")
+                    defaultResource("web-resources/index.html")
+                }
             }
             get("/hello") {
                 call.respondText("Hello, API!")
