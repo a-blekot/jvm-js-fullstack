@@ -12,10 +12,12 @@ val jsonClient = HttpClient {
 }
 
 suspend fun getShoppingList(): List<ShoppingListItem> {
+    console.log("suspend fun get")
     return jsonClient.get(ShoppingListItem.path).body()
 }
 
 suspend fun addShoppingListItem(shoppingListItem: ShoppingListItem) {
+    console.log("suspend fun add $shoppingListItem")
     jsonClient.post(ShoppingListItem.path) {
         contentType(ContentType.Application.Json)
         setBody(shoppingListItem)
@@ -23,9 +25,12 @@ suspend fun addShoppingListItem(shoppingListItem: ShoppingListItem) {
 }
 
 suspend fun toggleShoppingListItem(shoppingListItem: ShoppingListItem) {
+    console.log("suspend fun toggle $shoppingListItem")
+
     jsonClient.patch(ShoppingListItem.path + "/${shoppingListItem.id}")
 }
 
 suspend fun deleteShoppingListItem(shoppingListItem: ShoppingListItem) {
+    console.log("suspend fun delete $shoppingListItem")
     jsonClient.delete(ShoppingListItem.path + "/${shoppingListItem.id}")
 }

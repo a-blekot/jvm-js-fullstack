@@ -1,6 +1,6 @@
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 
-val kotlinVersion = "1.7.20-Beta"
+val kotlinVersion = "1.7.20"
 val serializationVersion = "1.3.3"
 val ktorVersion = "2.0.3"
 val logbackVersion = "1.2.11"
@@ -8,9 +8,10 @@ val kotlinWrappersVersion = "1.0.0-pre.354"
 val kmongoVersion = "4.5.0"
 
 plugins {
-    kotlin("multiplatform") version "1.7.20-Beta"
+    kotlin("multiplatform") version "1.7.20"
     application //to run JVM part
-    kotlin("plugin.serialization") version "1.7.20-Beta"
+    kotlin("plugin.serialization") version "1.7.20"
+    id("org.jetbrains.compose") version "1.2.2"
 }
 
 group = "org.example"
@@ -18,13 +19,14 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
 }
 
 kotlin {
     jvm {
         withJava()
     }
-    js {
+    js(IR) {
         browser {
             binaries.executable()
         }
@@ -34,6 +36,7 @@ kotlin {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
+                implementation(compose.runtime)
             }
         }
 
@@ -55,6 +58,7 @@ kotlin {
                 implementation("io.ktor:ktor-server-netty:$ktorVersion")
                 implementation("ch.qos.logback:logback-classic:$logbackVersion")
                 implementation("org.litote.kmongo:kmongo-coroutine-serialization:$kmongoVersion")
+                implementation(compose.runtime)
             }
         }
 
@@ -63,10 +67,10 @@ kotlin {
                 implementation("io.ktor:ktor-client-js:$ktorVersion")
                 implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-                implementation(project.dependencies.enforcedPlatform("org.jetbrains.kotlin-wrappers:kotlin-wrappers-bom:$kotlinWrappersVersion"))
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-react")
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom")
-//                implementation("org.jetbrains.kotlin-wrappers:kotlin-styled")
+                implementation(npm("@material-ui/icons", "4.11.2"))
+                implementation(compose.web.core)
+                implementation(compose.runtime)
+//                implementation("org.jetbrains.compose.runtime:runtime:1.2.2")
             }
         }
     }

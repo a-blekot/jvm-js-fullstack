@@ -1,35 +1,58 @@
-import org.w3c.dom.HTMLFormElement
-import react.*
-import org.w3c.dom.HTMLInputElement
-import react.dom.events.ChangeEventHandler
-import react.dom.events.FormEventHandler
-import react.dom.html.InputType
-import react.dom.html.ReactHTML.form
-import react.dom.html.ReactHTML.input
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import org.jetbrains.compose.web.css.*
+import org.jetbrains.compose.web.dom.Div
+import org.jetbrains.compose.web.dom.TextInput
 
-external interface InputProps : Props {
-    var onSubmit: (String) -> Unit
-}
+@Composable
+fun InputComponent(onSubmit: (String) -> Unit) {
+    val text = remember { mutableStateOf("") }
 
-val inputComponent = FC<InputProps> { props ->
-    val (text, setText) = useState("")
-
-    val submitHandler: FormEventHandler<HTMLFormElement> = {
-        it.preventDefault()
-        setText("")
-        props.onSubmit(text)
-    }
-
-    val changeHandler: ChangeEventHandler<HTMLInputElement> = {
-        setText(it.target.value)
-    }
-
-    form {
-        onSubmit = submitHandler
-        input {
-            type = InputType.text
-            onChange = changeHandler
-            value = text
+    Div(
+        attrs = {
+            style {
+                width(100.percent)
+                display(DisplayStyle.Flex)
+                flexFlow(FlexDirection.Row, FlexWrap.Nowrap)
+                alignItems(AlignItems.Center)
+                property("padding", "0px 0px 0px 16px")
+            }
         }
+    ) {
+        Div(
+            attrs = {
+                style {
+                    height(48.px)
+                    property("flex", "1 1 auto")
+                    property("white-space", "nowrap")
+                    property("text-overflow", "ellipsis")
+                    property("overflow", "hidden")
+                    display(DisplayStyle.Flex)
+                    alignItems(AlignItems.Center)
+                }
+//                            onClick { onClicked(item.id) }
+            }
+        ) {
+            TextInput(value = text.value) {
+                onInput { event ->
+                    text.value = event.value
+                    console.log("event ->  ${event.value}")
+                }
+            }
+        }
+
+        ImageButton(
+            onClick = {
+                onSubmit(text.value)
+            },
+            iconName = "add",
+            attrs = {
+                style {
+                    property("flex", "0 1 auto")
+                    marginLeft(8.px)
+                }
+            }
+        )
     }
 }
