@@ -21,10 +21,10 @@
 //    devtool: "source-map"
 //};
 
-config.resolve = {
-    fallback: {
-        fs: false,
-        path: false,
-        crypto: false
-    }
-}
+// config.resolve = {
+//     fallback: {
+//         fs: false, //todo problem with webpack
+//         path: false,
+//         crypto: false
+//     }
+// }
